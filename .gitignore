@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/venv
 /backend/node_modules
 /frontend/node_modules
 /.wilco-helpers/node_modules

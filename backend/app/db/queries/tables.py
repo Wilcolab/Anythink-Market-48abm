@@ -43,6 +43,7 @@ class Items(TypedTable):
     title: str
     description: str
     body: str
+    image: str
     seller_id: int
     created_at: datetime
     updated_at: datetime
