@@ -21,7 +21,7 @@ from app.models.domain.users import User
 
 SELLER_USERNAME_ALIAS = "seller_username"
 SLUG_ALIAS = "slug"
-PLACEHOLDER_IMG = "/placeholder.jpg"
+PLACEHOLDER_IMG = "/placeholder.png"
 
 CAMEL_OR_SNAKE_CASE_TO_WORDS = r"^[a-z\d_\-]+|[A-Z\d_\-][^A-Z\d_\-]*"
 
@@ -40,7 +40,7 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
         description: str,
         seller: User,
         body: Optional[str] = None,
-        image: str = PLACEHOLDER_IMG,
+        image: Optional[str] = None,
         tags: Optional[Sequence[str]] = None,
     ) -> Item:
         async with self.connection.transaction():
@@ -51,7 +51,7 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
                 description=description,
                 body=body,
                 seller_username=seller.username,
-                image=image
+                image=image or PLACEHOLDER_IMG
             )
 
             if tags:
