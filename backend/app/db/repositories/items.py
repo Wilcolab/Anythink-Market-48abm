@@ -2,6 +2,7 @@ from typing import List, Optional, Sequence, Union
 
 from asyncpg import Connection, Record
 from pypika import Query
+from pypika.functions import Lower
 
 from app.db.errors import EntityDoesNotExist
 from app.db.queries.queries import queries
@@ -103,6 +104,7 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
     async def filter_items(  # noqa: WPS211
         self,
         *,
+        title: Optional[str] = None,
         tag: Optional[str] = None,
         seller: Optional[str] = None,
         favorited: Optional[str] = None,
@@ -196,6 +198,14 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
                 ),
             )
             # fmt: on
+
+        if title:
+            query_params.append(
+                "%".join(['%'] + [char for char in title.lower()] + ['%']))
+            query_params_count += 1
+            query = query.where(
+                Lower(items.title).like(Parameter(query_params_count))
+            )
 
         query = query.limit(Parameter(query_params_count + 1)).offset(
             Parameter(query_params_count + 2),
